@@ -1,12 +1,36 @@
-on: push
+name: Flask CI with ngrok
 
+on: [push, pull_request]
 
 jobs:
-  flask-run:
+  web:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - run: pwd
-      - run: pip3 list
-      - run: pip3 install flask
-      - run: python3 app.py
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        pip install flask
+        pip install -r requirements.txt
+
+    - name: Start Flask app
+      run: python app.py &
+      env:
+        FLASK_ENV: development
+
+    - name: Install ngrok
+      run: |
+        wget -q https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+        unzip ngrok-stable-linux-amd64.zip
+
+    - name: Start ngrok
+      run: ./ngrok http 5000 & sleep 10
+
+    - name: Get public URL from ngrok
+      run: |
+        curl -s http://127.0.0.1:4040/api/tunnels | jq '.tunnels[0].public_url'
