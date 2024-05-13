@@ -5,7 +5,9 @@ jobs:
   flask-run:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - run: pwd
+
 #      - run: pip3 list
       - run: pip3 install flask
       - run: python3 app.py
