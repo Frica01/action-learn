@@ -1,15 +1,13 @@
 on: push
 
-
 jobs:
   flask-run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: pwd
-
-#      - run: pip3 list
       - run: pip3 install flask
-      - run: python3 app.py
+      - run: |
+          nohup python3 app.py &
+          sleep 5  # Gives Flask enough time to start
       - run: curl http://127.0.0.1:5000
-
