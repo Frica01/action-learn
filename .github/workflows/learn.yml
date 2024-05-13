@@ -1,3 +1,5 @@
+on: [push, pull_request]
+
 jobs:
   expose-flask:
     runs-on: ubuntu-latest
