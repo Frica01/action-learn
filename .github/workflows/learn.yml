@@ -13,7 +13,6 @@ jobs:
       run: |
         pip install flask
         sudo apt-get install jq  # 确保 jq 已安装
-        pip install -r requirements.txt
 
     - name: Start Flask app
       run: python app.py &
