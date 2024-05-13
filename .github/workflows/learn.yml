@@ -1,34 +1,12 @@
-on: [push, pull_request]
+on: push
+
 
 jobs:
-  expose-flask:
+  flask-run:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - run: pwd
+#      - run: pip3 list
+      - run: pip3 install flask
+      - run: curl http://127.0.0.1:5000
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
-
-    - name: Install dependencies
-      run: |
-        pip install flask
-        sudo apt-get install jq  # 确保 jq 已安装
-
-    - name: Start Flask app
-      run: python app.py &
-      env:
-        FLASK_ENV: development
-
-    - name: Install ngrok
-      run: |
-        wget -q https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
-        unzip ngrok-stable-linux-amd64.zip
-        ./ngrok http 5000 & sleep 10  # 启动 ngrok 并等待一些时间
-
-    - name: Get public URL from ngrok
-      run: |
-        curl http://127.0.0.1:4040/api/tunnels > ngrok-tunnels.json
-        cat ngrok-tunnels.json  # 显示原始 JSON 数据
-        jq '.tunnels[0].public_url' ngrok-tunnels.json  # 提取并显示 URL
